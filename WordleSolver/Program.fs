@@ -3,7 +3,22 @@ open System.IO
 let wordList = File.ReadLines("WordList.txt")
 
 type Word = Word of string
-type Clue = Clue of string
+
+type LetterClue =
+    | MatchCorrectPosition
+    | MatchWrongPosition
+    | NoMatch
+type Clue = Clue of LetterClue list
+
+let prettyPrint (Clue letterClues) =
+    letterClues
+    |> List.map (
+        fun x ->
+            match x with
+            | MatchCorrectPosition -> "G"
+            | MatchWrongPosition -> "Y"
+            | NoMatch -> "R")
+    |> String.concat ""
 
 let pairUp (string1:string) (string2:string) =
 
@@ -20,10 +35,10 @@ let matchPattern (Word guess) (Word actual) =
     pairedLetters
     |> List.map (
         fun (guessLetter, actualLetter) ->
-        if guessLetter = actualLetter then "g"
-        elif actual.Contains(guessLetter) then "y"
-        else "r"
+        if guessLetter = actualLetter then MatchCorrectPosition
+        elif actual.Contains(guessLetter) then MatchWrongPosition
+        else NoMatch
         )
-    |> String.concat ""
+    |> Clue
 
 
