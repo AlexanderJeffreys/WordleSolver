@@ -12,12 +12,11 @@ type Clue = Clue of LetterClue list
 
 let prettyPrint (Clue letterClues) =
     letterClues
-    |> List.map (
-        fun x ->
-            match x with
-            | MatchCorrectPosition -> "G"
-            | MatchWrongPosition -> "Y"
-            | NoMatch -> "R")
+    |> List.map
+        (function
+        | MatchCorrectPosition -> "G"
+        | MatchWrongPosition -> "Y"
+        | NoMatch -> "R")
     |> String.concat ""
 
 let pairUp (string1:string) (string2:string) =
@@ -33,12 +32,12 @@ let pairUp (string1:string) (string2:string) =
 let matchPattern (Word guess) (Word actual) =
     let pairedLetters = pairUp guess actual
     pairedLetters
-    |> List.map (
-        fun (guessLetter, actualLetter) ->
-        if guessLetter = actualLetter then MatchCorrectPosition
-        elif actual.Contains(guessLetter) then MatchWrongPosition
-        else NoMatch
-        )
+    |> List.map
+        (function
+         | guessLetter, actualLetter when guessLetter = actualLetter -> MatchCorrectPosition
+         | guessLetter, _ when actual.Contains(guessLetter) -> MatchWrongPosition
+         | _ -> NoMatch
+            )
     |> Clue
 
 
