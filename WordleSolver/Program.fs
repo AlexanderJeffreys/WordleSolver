@@ -19,7 +19,7 @@ let rec getResponseUntilValid () =
         printfn "Invalid response, please try again"
         getResponseUntilValid ()
 
-let rec guessLoop (guessAttempt:GuessAttempt) guessCount =
+let rec guessLoop guessAttempt guessCount =
 
     match guessAttempt with
     | GiveUp -> printfn "I give up!"

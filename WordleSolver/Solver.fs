@@ -17,7 +17,7 @@ let score possibleAnswers guess =
     |> Seq.map (fun (_, values) -> Seq.length values)
     |> Seq.max
 
-let bestGuess (possibleAnswers: Answer seq) (guessOptions: Guess seq) : Guess option =
+let bestGuess possibleAnswers guessOptions =
     match (List.ofSeq possibleAnswers) with
     | [] -> None
     | [ (Answer word) ] -> Some (Guess word)
@@ -37,5 +37,3 @@ let rec guessFor possibleAnswers guessOptions =
             Guess = guess
             ResponseHandler = fun clue -> guessFor (matchingAnswers possibleAnswers guess clue) guessOptions
         }
-
-
