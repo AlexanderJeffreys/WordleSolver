@@ -23,7 +23,7 @@ let matchingAnswers possibleAnswers guess clue =
     possibleAnswers
     |> Seq.where (fun answer -> matchPattern guess answer = clue)
 
-let rec guessFor possibleAnswers guessOptions : GuessStep =
+let rec guessFor possibleAnswers guessOptions =
     let guess = bestGuess possibleAnswers guessOptions
 
     let responseHandler clue = guessFor (matchingAnswers possibleAnswers guess clue) guessOptions

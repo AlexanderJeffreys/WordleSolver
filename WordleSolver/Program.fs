@@ -8,7 +8,7 @@ let wordListPath = "WordListLong.txt"
 let possibleGuesses = File.ReadLines(wordListPath) |> Seq.map Guess
 let possibleAnswers = File.ReadLines(wordListPath) |> Seq.map Answer
 
-let rec guessLoop (guessStep:GuessStep) (guessCount:int) =
+let rec guessLoop guessStep guessCount =
     let {Guess=(Guess word); ResponseHandler = responseHandler} = guessStep
     printfn $"Guess %i{guessCount}: %s{word}"
     let response = Console.ReadLine()
