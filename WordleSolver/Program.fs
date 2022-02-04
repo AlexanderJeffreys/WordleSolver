@@ -17,9 +17,9 @@ let rec getResponseUntilValid () =
         printfn "Invalid response, please try again"
         getResponseUntilValid ()
 
-let rec guessLoop guessAttempt guessCount =
+let rec guessUntilDone guessAction guessCount =
 
-    match guessAttempt with
+    match guessAction with
     | GiveUp -> printfn "I give up!"
     | Gloat -> printfn "I win!"
     | MakeGuess { NextGuess = (Guess word)
@@ -27,6 +27,6 @@ let rec guessLoop guessAttempt guessCount =
 
         printfn $"Guess %i{guessCount}: %s{word}"
         let clue = getResponseUntilValid ()
-        guessLoop (responseHandler clue) (guessCount + 1)
+        guessUntilDone (responseHandler clue) (guessCount + 1)
 
-guessLoop (guessFor wordList) 1
+guessUntilDone (guessFor wordList) 1
