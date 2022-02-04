@@ -45,19 +45,22 @@ let matchPattern (Guess guess) (Answer actual) =
     |> Clue
 
 let clueRegex = Regex(@"^[RYG]{5}")
-let tryClueFromString (str:string) : Clue option =
-    if clueRegex.IsMatch(str) then
-         str
-         |> Seq.map (function
-             | 'G' -> MatchCorrectPosition
-             | 'Y' -> MatchWrongPosition
-             | 'R' -> NoMatch)
-         |> List.ofSeq
-         |> Clue
-         |> Some
-    else None
 
-let clueFromString (str:string) =
+let tryClueFromString (str: string) : Clue option =
+    if clueRegex.IsMatch(str) then
+        str
+        |> Seq.map
+            (function
+            | 'G' -> MatchCorrectPosition
+            | 'Y' -> MatchWrongPosition
+            | 'R' -> NoMatch)
+        |> List.ofSeq
+        |> Clue
+        |> Some
+    else
+        None
+
+let clueFromString (str: string) =
     match tryClueFromString str with
     | Some clue -> clue
     | None -> failwith "Expected a valid clue string"

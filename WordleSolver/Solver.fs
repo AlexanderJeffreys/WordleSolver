@@ -6,10 +6,9 @@ type GuessAttempt =
     | MakeGuess of GuessStep
     | GiveUp
 
-and GuessStep = {
-    NextGuess: Guess
-    ResponseHandler: Clue -> GuessAttempt
-}
+and GuessStep =
+    { NextGuess: Guess
+      ResponseHandler: Clue -> GuessAttempt }
 
 let score possibleAnswers guess =
     possibleAnswers
@@ -20,8 +19,11 @@ let score possibleAnswers guess =
 let bestGuess possibleAnswers guessOptions =
     match (List.ofSeq possibleAnswers) with
     | [] -> None
-    | [ (Answer word) ] -> Some (Guess word)
-    | _ -> guessOptions |> Seq.minBy (score possibleAnswers) |> Some
+    | [ (Answer word) ] -> Some(Guess word)
+    | _ ->
+        guessOptions
+        |> Seq.minBy (score possibleAnswers)
+        |> Some
 
 let matchingAnswers possibleAnswers guess clue =
     possibleAnswers
@@ -33,10 +35,9 @@ let rec guessForAnswers possibleAnswers guessOptions =
     match guessAttempt with
     | None -> GiveUp
     | Some guess ->
-        MakeGuess {
-            NextGuess = guess
-            ResponseHandler = fun clue -> guessForAnswers (matchingAnswers possibleAnswers guess clue) guessOptions
-        }
+        MakeGuess
+            { NextGuess = guess
+              ResponseHandler = fun clue -> guessForAnswers (matchingAnswers possibleAnswers guess clue) guessOptions }
 
 let guessFor wordList =
     guessForAnswers (wordList |> Seq.map Answer) (wordList |> Seq.map Guess)
