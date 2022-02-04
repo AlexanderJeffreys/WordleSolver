@@ -10,6 +10,7 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Compile Include="WordMatching.fs" />
+        <Compile Include="Solver.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

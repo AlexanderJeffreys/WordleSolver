@@ -1,6 +1,9 @@
 ﻿module WordleSolver.WordMatching
 
-type Word = Word of string
+let wordLength = 5
+
+type Guess = Guess of string
+type Answer = Answer of string
 
 type LetterClue =
     | MatchCorrectPosition
@@ -28,7 +31,7 @@ let pairUp (string1: string) (string2: string) =
 
     pairUpLists (string1 |> Seq.toList) (string2 |> Seq.toList)
 
-let matchPattern (Word guess) (Word actual) =
+let matchPattern (Guess guess) (Answer actual) =
     let pairedLetters = pairUp guess actual
 
     pairedLetters
@@ -38,3 +41,13 @@ let matchPattern (Word guess) (Word actual) =
         | guessLetter, _ when actual.Contains(guessLetter) -> MatchWrongPosition
         | _ -> NoMatch)
     |> Clue
+
+let clueFromString (str:string) : Clue =
+    if str.Length <> wordLength then failwith $"Not a valid clue: %s{str}"
+    else str
+         |> Seq.map (function
+             | 'G' -> MatchCorrectPosition
+             | 'Y' -> MatchWrongPosition
+             | 'R' -> NoMatch)
+         |> List.ofSeq
+         |> Clue
