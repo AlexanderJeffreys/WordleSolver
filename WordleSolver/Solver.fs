@@ -40,6 +40,7 @@ let matchingAnswers possibleAnswers guess clue =
 let allGoodClue = clueFromString "GGGGG"
 
 let rec guessForAnswers possibleAnswers guessOptions =
+    printfn $"%i{Seq.length possibleAnswers} possibilities remaining"
     let guessAttempt = bestGuess possibleAnswers guessOptions
 
     match guessAttempt with
