@@ -1,5 +1,7 @@
 ﻿module WordleSolver.WordMatching
 
+open System.Text.RegularExpressions
+
 let wordLength = 5
 
 type Guess = Guess of string
@@ -42,12 +44,20 @@ let matchPattern (Guess guess) (Answer actual) =
         | _ -> NoMatch)
     |> Clue
 
-let clueFromString (str:string) : Clue =
-    if str.Length <> wordLength then failwith $"Not a valid clue: %s{str}"
-    else str
+let clueRegex = Regex(@"^[RYG]{5}")
+let tryClueFromString (str:string) : Clue option =
+    if clueRegex.IsMatch(str) then
+         str
          |> Seq.map (function
              | 'G' -> MatchCorrectPosition
              | 'Y' -> MatchWrongPosition
              | 'R' -> NoMatch)
          |> List.ofSeq
          |> Clue
+         |> Some
+    else None
+
+let clueFromString (str:string) =
+    match tryClueFromString str with
+    | Some clue -> clue
+    | None -> failwith "Expected a valid clue string"

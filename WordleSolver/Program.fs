@@ -8,6 +8,17 @@ let wordListPath = "WordListLong.txt"
 let possibleGuesses = File.ReadLines(wordListPath) |> Seq.map Guess
 let possibleAnswers = File.ReadLines(wordListPath) |> Seq.map Answer
 
+let allGoodClue = clueFromString "GGGGG"
+
+let rec getResponseUntilValid () =
+    let response = Console.ReadLine()
+    let clue = tryClueFromString (response.ToUpper())
+    match clue with
+    | Some clue -> clue
+    | None ->
+        printfn "Invalid response, please try again"
+        getResponseUntilValid ()
+
 let rec guessLoop guessStep guessCount =
 
     let {
@@ -16,10 +27,9 @@ let rec guessLoop guessStep guessCount =
     } = guessStep
 
     printfn $"Guess %i{guessCount}: %s{word}"
-    let response = Console.ReadLine()
+    let clue = getResponseUntilValid ()
 
-    match response with
-    | "GGGGG" -> printfn "I win!"
-    | _ -> guessLoop (responseHandler (clueFromString response)) (guessCount + 1)
+    if clue = allGoodClue then printfn "I win!"
+    else guessLoop (responseHandler clue) (guessCount + 1)
 
 guessLoop (guessFor possibleAnswers possibleGuesses) 1
