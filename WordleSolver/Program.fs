@@ -17,6 +17,7 @@ let rec getResponseUntilValid () =
         printfn "Invalid response, please try again"
         getResponseUntilValid ()
 
+// TODO: Limit to six guesses
 let rec guessUntilDone guessAction guessCount =
 
     match guessAction with

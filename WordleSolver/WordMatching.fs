@@ -26,6 +26,7 @@ let prettyPrint (Clue letterClues) =
 let matchPattern (Guess guess) (Answer actual) =
     let pairedLetters = Seq.zip guess actual
 
+    // TODO: The logic for MatchWrongPosition is wrong. The real Wordle handles duplicates differently
     pairedLetters
     |> Seq.map
         (function
