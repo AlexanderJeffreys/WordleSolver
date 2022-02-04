@@ -7,7 +7,7 @@ type GuessAttempt =
     | GiveUp
 
 and GuessStep = {
-    Guess: Guess
+    NextGuess: Guess
     ResponseHandler: Clue -> GuessAttempt
 }
 
@@ -34,7 +34,7 @@ let rec guessForAnswers possibleAnswers guessOptions =
     | None -> GiveUp
     | Some guess ->
         MakeGuess {
-            Guess = guess
+            NextGuess = guess
             ResponseHandler = fun clue -> guessForAnswers (matchingAnswers possibleAnswers guess clue) guessOptions
         }
 

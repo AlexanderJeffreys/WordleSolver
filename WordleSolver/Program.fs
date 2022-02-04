@@ -24,14 +24,14 @@ let rec guessLoop guessAttempt guessCount =
     | GiveUp -> printfn "I give up!"
     | MakeGuess
         {
-            Guess=(Guess guess)
-            ResponseHandler=handler
+            NextGuess = (Guess word)
+            ResponseHandler = responseHandler
         } ->
 
-        printfn $"Guess %i{guessCount}: %s{guess}"
+        printfn $"Guess %i{guessCount}: %s{word}"
         let clue = getResponseUntilValid ()
 
         if clue = allGoodClue then (printfn "I win!")
-        else guessLoop (handler clue) (guessCount + 1)
+        else guessLoop (responseHandler clue) (guessCount + 1)
 
 guessLoop (guessFor wordList) 1
