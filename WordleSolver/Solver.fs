@@ -2,13 +2,14 @@
 
 open WordMatching
 
-type GuessAttempt =
+type GuessAction =
     | MakeGuess of GuessStep
+    | Gloat
     | GiveUp
 
 and GuessStep =
     { NextGuess: Guess
-      ResponseHandler: Clue -> GuessAttempt }
+      ResponseHandler: Clue -> GuessAction }
 
 let score possibleAnswers guess =
     possibleAnswers
@@ -29,6 +30,8 @@ let matchingAnswers possibleAnswers guess clue =
     possibleAnswers
     |> Seq.where (fun answer -> matchPattern guess answer = clue)
 
+let allGoodClue = clueFromString "GGGGG"
+
 let rec guessForAnswers possibleAnswers guessOptions =
     let guessAttempt = bestGuess possibleAnswers guessOptions
 
@@ -37,7 +40,10 @@ let rec guessForAnswers possibleAnswers guessOptions =
     | Some guess ->
         MakeGuess
             { NextGuess = guess
-              ResponseHandler = fun clue -> guessForAnswers (matchingAnswers possibleAnswers guess clue) guessOptions }
+              ResponseHandler = fun clue ->
+                  match clue with
+                  | clue when clue = allGoodClue -> Gloat
+                  | _ -> guessForAnswers (matchingAnswers possibleAnswers guess clue) guessOptions }
 
 let guessFor wordList =
     guessForAnswers (wordList |> Seq.map Answer) (wordList |> Seq.map Guess)
