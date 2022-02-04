@@ -2,9 +2,13 @@
 
 open WordMatching
 
-type GuessStep = {
+type GuessAttempt =
+    | MakeGuess of GuessStep
+    | GiveUp
+
+and GuessStep = {
     Guess: Guess
-    ResponseHandler: Clue -> GuessStep
+    ResponseHandler: Clue -> GuessAttempt
 }
 
 let score possibleAnswers guess =
@@ -13,24 +17,25 @@ let score possibleAnswers guess =
     |> Seq.map (fun (_, values) -> Seq.length values)
     |> Seq.max
 
-
-let bestGuess (possibleAnswers: Answer seq) (guessOptions: Guess seq) : Guess =
+let bestGuess (possibleAnswers: Answer seq) (guessOptions: Guess seq) : Guess option =
     match (List.ofSeq possibleAnswers) with
-    | [ (Answer word) ] -> Guess word
-    | _ -> guessOptions |> Seq.minBy (score possibleAnswers)
+    | [] -> None
+    | [ (Answer word) ] -> Some (Guess word)
+    | _ -> guessOptions |> Seq.minBy (score possibleAnswers) |> Some
 
 let matchingAnswers possibleAnswers guess clue =
     possibleAnswers
     |> Seq.where (fun answer -> matchPattern guess answer = clue)
 
 let rec guessFor possibleAnswers guessOptions =
-    let guess = bestGuess possibleAnswers guessOptions
+    let guessAttempt = bestGuess possibleAnswers guessOptions
 
-    let responseHandler clue = guessFor (matchingAnswers possibleAnswers guess clue) guessOptions
-
-    {
-        Guess = guess
-        ResponseHandler = responseHandler
-    }
+    match guessAttempt with
+    | None -> GiveUp
+    | Some guess ->
+        MakeGuess {
+            Guess = guess
+            ResponseHandler = fun clue -> guessFor (matchingAnswers possibleAnswers guess clue) guessOptions
+        }
 
 

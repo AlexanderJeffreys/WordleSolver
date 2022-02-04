@@ -19,17 +19,20 @@ let rec getResponseUntilValid () =
         printfn "Invalid response, please try again"
         getResponseUntilValid ()
 
-let rec guessLoop guessStep guessCount =
+let rec guessLoop (guessAttempt:GuessAttempt) guessCount =
 
-    let {
-        Guess=(Guess word)
-        ResponseHandler = responseHandler
-    } = guessStep
+    match guessAttempt with
+    | GiveUp -> printfn "I give up!"
+    | MakeGuess
+        {
+            Guess=(Guess guess)
+            ResponseHandler=handler
+        } ->
 
-    printfn $"Guess %i{guessCount}: %s{word}"
-    let clue = getResponseUntilValid ()
+        printfn $"Guess %i{guessCount}: %s{guess}"
+        let clue = getResponseUntilValid ()
 
-    if clue = allGoodClue then printfn "I win!"
-    else guessLoop (responseHandler clue) (guessCount + 1)
+        if clue = allGoodClue then (printfn "I win!")
+        else guessLoop (handler clue) (guessCount + 1)
 
 guessLoop (guessFor possibleAnswers possibleGuesses) 1
