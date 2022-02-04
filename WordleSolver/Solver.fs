@@ -27,7 +27,7 @@ let matchingAnswers possibleAnswers guess clue =
     possibleAnswers
     |> Seq.where (fun answer -> matchPattern guess answer = clue)
 
-let rec guessFor possibleAnswers guessOptions =
+let rec guessForAnswers possibleAnswers guessOptions =
     let guessAttempt = bestGuess possibleAnswers guessOptions
 
     match guessAttempt with
@@ -35,5 +35,8 @@ let rec guessFor possibleAnswers guessOptions =
     | Some guess ->
         MakeGuess {
             Guess = guess
-            ResponseHandler = fun clue -> guessFor (matchingAnswers possibleAnswers guess clue) guessOptions
+            ResponseHandler = fun clue -> guessForAnswers (matchingAnswers possibleAnswers guess clue) guessOptions
         }
+
+let guessFor wordList =
+    guessForAnswers (wordList |> Seq.map Answer) (wordList |> Seq.map Guess)

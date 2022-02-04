@@ -5,8 +5,7 @@ open WordMatching
 open WordleSolver.Solver
 
 let wordListPath = "WordListLong.txt"
-let possibleGuesses = File.ReadLines(wordListPath) |> Seq.map Guess
-let possibleAnswers = File.ReadLines(wordListPath) |> Seq.map Answer
+let wordList = File.ReadLines(wordListPath)
 
 let allGoodClue = clueFromString "GGGGG"
 
@@ -35,4 +34,4 @@ let rec guessLoop guessAttempt guessCount =
         if clue = allGoodClue then (printfn "I win!")
         else guessLoop (handler clue) (guessCount + 1)
 
-guessLoop (guessFor possibleAnswers possibleGuesses) 1
+guessLoop (guessFor wordList) 1
