@@ -6,7 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="WordList.txt">
+        <Content Include="WordListShort.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="WordListLong.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Compile Include="WordMatching.fs" />
