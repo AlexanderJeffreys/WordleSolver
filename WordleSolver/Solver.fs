@@ -11,7 +11,14 @@ and GuessStep =
     { NextGuess: Guess
       ResponseHandler: Clue -> GuessAction }
 
-let score possibleAnswers guess =
+let scoreAverage possibleAnswers guess =
+    possibleAnswers
+    |> Seq.groupBy (matchPattern guess)
+    |> Seq.map (fun (_, values) -> Seq.length values)
+    |> Seq.map (fun x -> x * x)
+    |> Seq.sum
+
+let scoreMax possibleAnswers guess =
     possibleAnswers
     |> Seq.groupBy (matchPattern guess)
     |> Seq.map (fun (_, values) -> Seq.length values)
@@ -23,7 +30,7 @@ let bestGuess possibleAnswers guessOptions =
     | [ (Answer word) ] -> Some(Guess word)
     | _ ->
         guessOptions
-        |> Seq.minBy (score possibleAnswers)
+        |> Seq.minBy (scoreAverage possibleAnswers)
         |> Some
 
 let matchingAnswers possibleAnswers guess clue =
