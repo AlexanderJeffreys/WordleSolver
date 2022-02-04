@@ -23,25 +23,16 @@ let prettyPrint (Clue letterClues) =
         | NoMatch -> "R")
     |> String.concat ""
 
-let pairUp (string1: string) (string2: string) =
-
-    let rec pairUpLists list1 list2 =
-        match list1, list2 with
-        | [], [] -> []
-        | head1 :: tail1, head2 :: tail2 -> (head1, head2) :: (pairUpLists tail1 tail2)
-        | _ -> invalidOp "Lists have mismatching number of elements"
-
-    pairUpLists (string1 |> Seq.toList) (string2 |> Seq.toList)
-
 let matchPattern (Guess guess) (Answer actual) =
-    let pairedLetters = pairUp guess actual
+    let pairedLetters = Seq.zip guess actual
 
     pairedLetters
-    |> List.map
+    |> Seq.map
         (function
         | guessLetter, actualLetter when guessLetter = actualLetter -> MatchCorrectPosition
         | guessLetter, _ when actual.Contains(guessLetter) -> MatchWrongPosition
         | _ -> NoMatch)
+    |> List.ofSeq
     |> Clue
 
 let clueRegex = Regex(@"^[RYG]{5}")
